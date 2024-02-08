@@ -1,9 +1,14 @@
-// import { registerAndVerifyEmail } from "../helpers/APIS";
 import { generateEmail } from "../helpers/RandomEmail";
 import { AuthForm } from "../organism/AuthForm";
 import { Button } from "../atoms/Button";
+import { CardTittle } from "../atoms/Card";
+import { FormAccount } from "../organism/FormAccount";
+import { Banner } from "../atoms/Banner";
+import { generatePhoneNumber } from "../helpers/RandomPhone";
+
 describe("Test Lab", () => {
   beforeEach(() => {
+    cy.clearAllLocalStorage();
     cy.visit("/login");
   });
 
@@ -35,6 +40,42 @@ describe("Test Lab", () => {
 
         AuthForm(email, password);
         Button("login");
+        CardTittle("titleCreateAnAccount");
+
+        let numberPhone = generatePhoneNumber();
+        cy.log("☎️", numberPhone);
+
+        FormAccount("Andrew", "Mary", numberPhone);
+
+        // Botón de Crear Cuenta
+        Button("continueCreateAccount");
+
+        // Botón para Iniciar el tour
+        Button("startNow");
+
+        // Botón para Iniciar tour dentro del tour
+        cy.wait(5000);
+        Button("startTour");
+
+        Button("nextTour");
+
+        Button("nextTour");
+
+        Button("nextTour");
+
+        Button("nextTour");
+
+        Button("nextTour");
+
+        Button("nextTour");
+
+        Button("startNow");
+
+        Button("connectBankAccount");
+
+        // mdWidget
+
+        cy.get('[id="mdWidget"]');
       });
     });
   });

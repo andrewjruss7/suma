@@ -15,7 +15,7 @@ export function registerAndVerifyEmail() {
   }).then((response) => {
     expect(response.status).to.equal(200);
 
-    const token: string = response.body.data.token;
+    const token: string = response.body.data.verificationToken;
     cy.log("🥾 token obtenido: ", token);
 
     // API EMAIL VERIFICATION
