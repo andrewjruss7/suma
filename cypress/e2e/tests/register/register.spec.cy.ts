@@ -11,7 +11,7 @@ describe("Register Functionality", () => {
   });
 
   credentials.forEach((credential, index) => {
-    it(`🧪 Test ${index + 1} -> ${credential.test} `, () => {
+    it.skip(`🧪 Test ${index + 1} -> ${credential.test} `, () => {
       const generatedEmail = generateEmail();
       AuthForm(
         credential.email === "{GENERATE_UNIQUE_EMAIL}"

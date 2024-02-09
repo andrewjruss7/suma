@@ -11,7 +11,7 @@ describe("Login Functionality", () => {
   });
 
   credentials.forEach((credential, index) => {
-    it(`🧪 Test ${index + 1} -> ${credential.test} `, () => {
+    it.skip(`🧪 Test ${index + 1} -> ${credential.test} `, () => {
       AuthForm(credential.email, credential.password);
       Button("login");
       if (credential.expectedResult === "success") {

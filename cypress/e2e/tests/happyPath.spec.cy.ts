@@ -1,10 +1,14 @@
 import { generateEmail } from "../helpers/RandomEmail";
 import { AuthForm } from "../organism/AuthForm";
-import { Button } from "../atoms/Button";
+import { Button, ButtonMX } from "../atoms/Button";
 import { CardTittle } from "../atoms/Card";
 import { FormAccount } from "../organism/FormAccount";
 import { Banner } from "../atoms/Banner";
 import { generatePhoneNumber } from "../helpers/RandomPhone";
+import { getIframeBody } from "../helpers/GetIFrame"; // getIframeBody
+import "cypress-iframe";
+import { AuthMX } from "../organism/AuthMX";
+import { SelectMX } from "../atoms/Select";
 
 describe("Test Lab", () => {
   beforeEach(() => {
@@ -73,9 +77,14 @@ describe("Test Lab", () => {
 
         Button("connectBankAccount");
 
-        // mdWidget
+        cy.wait(5000);
 
-        cy.get('[id="mdWidget"]');
+        SelectMX("MXBank");
+        AuthMX("mxuser", "12345678");
+        ButtonMX("MXButtonContinue");
+
+        cy.wait(20000);
+        cy.contains("Connection Successful").should("be.visible");
       });
     });
   });
