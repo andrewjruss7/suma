@@ -3,12 +3,11 @@ import { AuthForm } from "../organism/AuthForm";
 import { Button, ButtonMX } from "../atoms/Button";
 import { CardTittle } from "../atoms/Card";
 import { FormAccount } from "../organism/FormAccount";
-import { Banner } from "../atoms/Banner";
 import { generatePhoneNumber } from "../helpers/RandomPhone";
-import { getIframeBody } from "../helpers/GetIFrame"; // getIframeBody
 import "cypress-iframe";
 import { AuthMX } from "../organism/AuthMX";
 import { SelectMX } from "../atoms/Select";
+import { Tour } from "../organism/Tour";
 
 describe("Test Lab", () => {
   beforeEach(() => {
@@ -16,7 +15,7 @@ describe("Test Lab", () => {
     cy.visit("/login");
   });
 
-  it("Registro y verificación de correo", () => {
+  it("Un usuario puede realizar todo el happy path de suma app. ", () => {
     const email: string = generateEmail();
     const password: string = "/Upp3rR00m";
     cy.log("Email Creado: ", email);
@@ -31,13 +30,14 @@ describe("Test Lab", () => {
     }).then((response) => {
       expect(response.status).to.equal(200);
 
-      const token: string = response.body.data.verificationToken;
+      const tokenVerify: string = response.body.data.verificationToken;
+      const token: string = response.body.data.token;
       cy.log("🥾 token obtenido: ", token);
 
       // API EMAIL VERIFICATION
       cy.request({
         method: "GET",
-        url: `https://apiv2.reelit.ninja/api/v1/verify-email/${token}`,
+        url: `https://apiv2.reelit.ninja/api/v1/verify-email/${tokenVerify}`,
       }).then((verificationResponse) => {
         expect(verificationResponse.status).to.equal(200);
         cy.log("👨🏻‍💻 Email verificado!");
@@ -47,9 +47,8 @@ describe("Test Lab", () => {
         CardTittle("titleCreateAnAccount");
 
         let numberPhone = generatePhoneNumber();
-        cy.log("☎️", numberPhone);
 
-        FormAccount("Andrew", "Mary", numberPhone);
+        FormAccount("Andrew", "Russ", numberPhone);
 
         // Botón de Crear Cuenta
         Button("continueCreateAccount");
@@ -58,26 +57,13 @@ describe("Test Lab", () => {
         Button("startNow");
 
         // Botón para Iniciar tour dentro del tour
-        cy.wait(5000);
-        Button("startTour");
+        cy.wait(10000);
 
-        Button("nextTour");
-
-        Button("nextTour");
-
-        Button("nextTour");
-
-        Button("nextTour");
-
-        Button("nextTour");
-
-        Button("nextTour");
-
-        Button("startNow");
+        Tour();
 
         Button("connectBankAccount");
 
-        cy.wait(5000);
+        cy.wait(10000);
 
         SelectMX("MXBank");
         AuthMX("mxuser", "12345678");
