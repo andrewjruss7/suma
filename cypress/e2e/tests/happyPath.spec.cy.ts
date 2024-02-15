@@ -1,5 +1,3 @@
-import { generateEmail } from "../helpers/RandomEmail";
-import { AuthForm } from "../organism/AuthForm";
 import { Button, ButtonMX } from "../atoms/Button";
 import { CardTittle } from "../atoms/Card";
 import { FormAccount } from "../organism/FormAccount";
@@ -8,70 +6,55 @@ import "cypress-iframe";
 import { AuthMX } from "../organism/AuthMX";
 import { SelectMX } from "../atoms/Select";
 import { Tour } from "../organism/Tour";
+import { AuthAPI } from "../helpers/APIS";
 
-describe("Test Lab", () => {
+const happypathData = require("../../fixtures/happyPath/happyPath.json");
+
+describe("Happy Path User in SUMA App", () => {
   beforeEach(() => {
     cy.clearAllLocalStorage();
     cy.visit("/login");
   });
 
-  it("Un usuario puede realizar todo el happy path de suma app. ", () => {
-    const email: string = generateEmail();
-    const password: string = "/Upp3rR00m";
-    cy.log("Email Creado: ", email);
+  happypathData.forEach((data, index) => {
+    it(`🧪 Test ${index + 1} -> ${data.test}`, () => {
+      // API Auth
+      AuthAPI();
 
-    cy.request({
-      method: "POST",
-      url: "https://apiv2.reelit.ninja/api/v1/register",
-      body: {
-        email: email,
-        password: password,
-      },
-    }).then((response) => {
-      expect(response.status).to.equal(200);
+      // Modal para Crear Cuenta
+      CardTittle("titleCreateAnAccount");
 
-      const tokenVerify: string = response.body.data.verificationToken;
-      const token: string = response.body.data.token;
-      cy.log("🥾 token obtenido: ", token);
+      let phoneNumber = generatePhoneNumber();
 
-      // API EMAIL VERIFICATION
-      cy.request({
-        method: "GET",
-        url: `https://apiv2.reelit.ninja/api/v1/verify-email/${tokenVerify}`,
-      }).then((verificationResponse) => {
-        expect(verificationResponse.status).to.equal(200);
-        cy.log("👨🏻‍💻 Email verificado!");
+      FormAccount(
+        data.firstName,
+        data.lastName,
+        phoneNumber
+        //   data.phone === "{GENERATE_PHONE_NUMBER}" ? phoneNumber : data.phone
+      );
 
-        AuthForm(email, password);
-        Button("login");
-        CardTittle("titleCreateAnAccount");
+      // Botón de Crear Cuenta
+      Button("continueCreateAccount");
 
-        let numberPhone = generatePhoneNumber();
+      // Botón para Iniciar el tour
+      Button("startNow");
 
-        FormAccount("Andrew", "Russ", numberPhone);
+      cy.wait(10000);
 
-        // Botón de Crear Cuenta
-        Button("continueCreateAccount");
+      // Tour por el mapa.
+      Tour();
 
-        // Botón para Iniciar el tour
-        Button("startNow");
+      // Conectar una cuenta
+      Button("connectBankAccount");
 
-        // Botón para Iniciar tour dentro del tour
-        cy.wait(10000);
+      cy.wait(10000);
 
-        Tour();
-
-        Button("connectBankAccount");
-
-        cy.wait(10000);
-
-        SelectMX("MXBank");
-        AuthMX("mxuser", "12345678");
-        ButtonMX("MXButtonContinue");
-
-        cy.wait(20000);
-        cy.contains("Connection Successful").should("be.visible");
-      });
+      // Conexión con MX
+      SelectMX("MXBank");
+      AuthMX("mxuser", "12345678");
+      ButtonMX("MXButtonContinue");
+      cy.wait(20000);
+      cy.contains("Connection Successful").should("be.visible");
     });
   });
 });
