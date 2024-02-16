@@ -12,6 +12,8 @@ export const typeButtons = {
   startTour: createButton("button", "Start"),
   nextTour: createButton("button", "Next"),
   connectBankAccount: createButton("button", "Connect bank account"),
+  moneyInsights: createButton("button", "MONEY INSIGHTS"), // View Breakdown
+  viewBreakdown: createButton("button", "View Breakdown"),
 };
 
 export const Button = (button: keyof typeof typeButtons) => {

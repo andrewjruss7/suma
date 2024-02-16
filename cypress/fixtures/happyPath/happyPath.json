@@ -1,6 +1,6 @@
 [
   {
-    "test": "A user can carry out the entire happy path of the sum app.",
+    "test": "User registration and account connection with MX through the tour",
     "firstName": "Mary",
     "lastName": "Boot",
     "phone": "GENERATE_PHONE_NUMBER"
